@@ -1,5 +1,5 @@
 package model;
 
-public interface Observers<Subject>{
+public interface Observer<Subject>{
     void update(Subject subject);
 }
