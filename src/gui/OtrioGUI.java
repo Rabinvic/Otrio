@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
@@ -23,6 +24,7 @@ public class OtrioGUI extends Application implements Observer<OtrioModel>{
     private Scene titleScene;
     private Scene disclaimerScene;
     private Scene playerSelectionScene;
+    private Scene rulesScene;
     private Scene board;
     private Stage stage;
 
@@ -76,7 +78,10 @@ public class OtrioGUI extends Application implements Observer<OtrioModel>{
         newGameButton.setOnAction(event -> stage.setScene(playerSelectionScene));
         Button rulesButton=new Button("Rules");
         Button disclaimerButton=new Button("Disclaimer");
+
         disclaimerButton.setOnAction(event -> {makeDisclaimerScene(); stage.setScene(disclaimerScene);});
+        rulesButton.setOnAction(event -> {makeRulesPane(); stage.setScene(rulesScene);});
+
         fp.getChildren().addAll(newGameButton,rulesButton,disclaimerButton);
         bp.setBottom(fp);
         fp.setAlignment(Pos.BOTTOM_CENTER);
@@ -102,6 +107,19 @@ public class OtrioGUI extends Application implements Observer<OtrioModel>{
         disclaimerScene=new Scene(bp);
     }
 
+    private void makeRulesPane(){
+        BorderPane bp = new BorderPane();
+        Label rules=new Label("Each player will have their own set of pieces including 3 big, medium, and small pieces of the same color.\n Going in order, players place their respective color peice onto the board.If the player can not make a move they skip their turn until a player has achieved an Otrio.\n\nTo get an Otrio and win the game, a player must have all 3 types of pieces in a singular cell, have 3 in the row of the same size, or 3 in a row of ascending or descending piecies.");
+        rules.setStyle("-fx-font-size: 18px;-fx-content-display: center;");
+        bp.setCenter(rules);
+
+        Button backButton=new Button("Main Menu");
+        backButton.setOnAction(event -> stage.setScene(titleScene));
+        backButton.setStyle("-fx-font-size: 20px;");
+        bp.setTop(backButton);
+        backButton.setAlignment(Pos.TOP_LEFT);
+        rulesScene=new Scene(bp);
+    }
 
     private FlowPane makePlayerSelectFP(){
         FlowPane fp=new FlowPane();
@@ -126,6 +144,7 @@ public class OtrioGUI extends Application implements Observer<OtrioModel>{
         }
         return gp;
     }
+
     @Override
     public void update(OtrioModel model) {
         // TODO Auto-generated method stub
