@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 import model.Observer;
 import model.OtrioModel;
 
-public class OtrioGUI extends Application implements Observer<OtrioModel>{
+public class OtrioGUI extends Application implements Observer<OtrioModel, String>{
 
     private OtrioModel model;
     private Scene titleScene;
@@ -32,7 +32,6 @@ public class OtrioGUI extends Application implements Observer<OtrioModel>{
     public void start(Stage primaryStage) throws Exception {
         this.stage=primaryStage;
         makeTitleScene();
-        makeBoardScene();
         makePlayerSelectionScene();
         
         
@@ -54,9 +53,40 @@ public class OtrioGUI extends Application implements Observer<OtrioModel>{
         bp.setCenter(gp);
         gp.setAlignment(Pos.CENTER);
         board=new Scene(bp);
-    
+
+        Label playerLabel1 = createPlayerLabel(1);
+        bp.setTop(playerLabel1);
+        bp.setAlignment(playerLabel1, Pos.CENTER);
+
+        Label playerLabel2 = createPlayerLabel(2);
+        bp.setBottom(playerLabel2);
+        bp.setAlignment(playerLabel2, Pos.CENTER);
+
+        if(model.getPlayers() >= 3){
+            Label playerLabel3 = createPlayerLabel(3);
+            bp.setLeft(playerLabel3);
+        }
+        if(model.getPlayers() == 4){
+            Label playerLabel4 = createPlayerLabel(4);
+            bp.setRight(playerLabel4);
+        }
+
+        
     }
 
+    private Label createPlayerLabel(int player){
+        int[] playerInfo = model.getPlayerInfo(player-1);
+        String playerInfoString = "";
+        for(int i = 0; i < 3; i++){
+            playerInfoString += playerInfo[i];
+            if (i != 2){
+                playerInfoString += ",";
+            }
+        }
+        System.out.println(playerInfoString);
+        Label lb = new Label("Player " + player + ": "+ playerInfoString);
+        return lb;
+    }
     private void makePlayerSelectionScene(){
         FlowPane playerSelect=makePlayerSelectFP();
         playerSelectionScene=new Scene(playerSelect);
@@ -126,7 +156,7 @@ public class OtrioGUI extends Application implements Observer<OtrioModel>{
         for(int i=2;i<=4;i++){
             Button b = new Button("Players: "+i);
             int players=i;
-            b.setOnAction(event -> {model.setPlayers(players); stage.setScene(board);});
+            b.setOnAction(event -> {model.setPlayers(players); makeBoardScene(); stage.setScene(board);});
             b.setPrefSize(100, 100);
             fp.getChildren().add(b);
         }
@@ -146,7 +176,7 @@ public class OtrioGUI extends Application implements Observer<OtrioModel>{
     }
 
     @Override
-    public void update(OtrioModel model) {
+    public void update(OtrioModel model, String msg) {
         // TODO Auto-generated method stub
         
     }
